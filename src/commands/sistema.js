@@ -11,11 +11,17 @@ data:new SlashCommandBuilder()
 .addSubcommand(function(s){return s.setName('lista-adms').setDescription('Ver ADMs')}),
 
 async execute(c,i){
+var DONO=process.env.DONO_ID||'';
 var cfg=ler('config.json');
 var donos=cfg.donos||[];
 var adms=cfg.admsAutorizados||[];
 var eu=i.user.id;
-if(!donos.includes(eu) && !adms.some(function(x){return x.id===eu&&x.ativo})) return i.reply({content:'Sem permissao',ephemeral:true});
+
+var PERMITIDO = (DONO && eu===DONO) || donos.includes(eu) || adms.some(function(x){return x.id===eu&&x.ativo});
+if(!PERMITIDO){
+return i.reply({content:'❌ Acesso negado!\nSeu ID: '+eu+'\nDono: '+DONO,ephemeral:true})
+}
+
 var sb=i.options.getSubcommand();
 
 if(sb==='render'){
@@ -32,7 +38,8 @@ return i.reply({embeds:[e],components:[r],ephemeral:true});
 
 if(sb==='add-adm'){
 var u=i.options.getUser('usuario');
-if(donos.includes(u.id)||adms.some(function(x){return x.id===u.id})) return i.reply({content:'Ja existe',ephemeral:true});
+if(DONO && u.id===DONO)return i.reply({content:'Ja e dono principal',ephemeral:true});
+if(adms.some(function(x){return x.id===u.id}))return i.reply({content:'Ja e ADM',ephemeral:true});
 adms.push({id:u.id,nome:u.tag,por:eu,ativo:true});salvar('config.json',cfg);
 return i.reply({content:'Adicionado: '+u.toString(),ephemeral:true});
 }
@@ -40,7 +47,7 @@ return i.reply({content:'Adicionado: '+u.toString(),ephemeral:true});
 if(sb==='del-adm'){
 var u=i.options.getUser('usuario');
 var p=adms.findIndex(function(x){return x.id===u.id});
-if(p===-1) return i.reply({content:'Nao encontrado',ephemeral:true});
+if(p===-1)return i.reply({content:'Nao encontrado',ephemeral:true});
 adms.splice(p,1);salvar('config.json',cfg);
 return i.reply({content:'Removido: '+u.toString(),ephemeral:true});
 }
