@@ -1,15 +1,14 @@
 const {SlashCommandBuilder,ActionRowBuilder,ButtonBuilder,ButtonStyle,EmbedBuilder}=require('discord.js');
-const {ler}=require('../utils/banco');
-module.exports={data:new SlashCommandBuilder().setName('loja').setDescription('🛒 Abrir loja'),
+const {ler}=require('../../banco');
+module.exports={
+data:new SlashCommandBuilder().setName('loja').setDescription('🛒 Ver produtos da loja'),
 async execute(c,i){
-const cfg=ler('config.json')||{},prods=(ler('produtos.json')||[]).filter(p=>p.estoque>0||p.estoque===-1);
-const e=new EmbedBuilder().setColor(0x9B59B6).setTitle('🛒 LOJA').setDescription(cfg.mensagem_loja||'Bem-vindo!')
-.addFields({name:'📦 Produtos',value:String(prods.length),inline:true},{name:'💳 Pagamento',value:'PIX',inline:true});
+const cfg=ler('config.json');
+const e=new EmbedBuilder().setColor(cfg.cor||0x9B59B6).setTitle('🛒 MINHA LOJA').setDescription(cfg.mensagem_loja||'Escolha abaixo o que você quer comprar');
+const r=new ActionRowBuilder().addComponents(
+new ButtonBuilder().setCustomId('cli_produtos').setLabel('📦 Ver Produtos').setStyle(3),
+new ButtonBuilder().setCustomId('cli_pedidos').setLabel('📋 Meus Pedidos').setStyle(1),
+new ButtonBuilder().setCustomId('cli_carteira').setLabel('💰 Carteira').setStyle(2),
+new ButtonBuilder().setCustomId('cli_suporte').setLabel('🆘 Suporte').setStyle(4));
 if(cfg.imagem_loja)e.setImage(cfg.imagem_loja);
-const r1=new ActionRowBuilder().addComponents(
-new ButtonBuilder().setCustomId('cli_produtos').setLabel('📦 Produtos').setStyle(1),
-new ButtonBuilder().setCustomId('cli_pedidos').setLabel('📋 Pedidos').setStyle(2),
-new ButtonBuilder().setCustomId('cli_carteira').setLabel('💰 Carteira').setStyle(3),
-new ButtonBuilder().setCustomId('cli_cupons').setLabel('🎟️ Cupons').setStyle(1));
-const r2=new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId('cli_suporte').setLabel('🆘 Suporte').setStyle(4));
-await i.reply({embeds:[e],components:[r1,r2]})}};
+await i.reply({embeds:[e],components:[r],ephemeral:false})}};
