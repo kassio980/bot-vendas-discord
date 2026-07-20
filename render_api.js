@@ -1,13 +1,13 @@
 const https = require('https');
 
-function api(method, path, body) {
+function api(method, pathExtra, body) {
   return new Promise(function(resolve, reject){
-    const K = process.env.RENDER_API_KEY || '';
-    const S = process.env.RENDER_SERVICE_ID || '';
-    const data = body ? JSON.stringify(body) : '';
-    const opts = {
+    var K = process.env.RENDER_API_KEY || '';
+    var S = process.env.RENDER_SERVICE_ID || '';
+    var data = body ? JSON.stringify(body) : '';
+    var opts = {
       hostname: 'api.render.com',
-      path: '/v1/services/' + S + path,
+      path: '/v1/services/' + S + pathExtra,
       method: method,
       headers: {
         Authorization: 'Bearer ' + K,
@@ -16,7 +16,7 @@ function api(method, path, body) {
         'Content-Length': Buffer.byteLength(data)
       }
     };
-    const req = https.request(opts, function(res){
+    var req = https.request(opts, function(res){
       var raw = '';
       res.on('data', function(c){ raw += c; });
       res.on('end', function(){
