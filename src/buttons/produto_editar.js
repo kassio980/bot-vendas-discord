@@ -1,2 +1,3 @@
-const {EmbedBuilder}=require('discord.js');
-module.exports={id:'produto_editar',async execute(c,i){await i.update({embeds:[{color:0x3498DB,title:'⚙️ produto_editar',description:'Em construção'}],components:[]})}};
+const {info}=require('../../embeds');
+module.exports={id:'produto_editar',async execute(c,i){
+await i.update({embeds:[info('⚙️ produto_editar','Funcionalidade em implementacao. Em breve disponivel!')],components:[]})}};

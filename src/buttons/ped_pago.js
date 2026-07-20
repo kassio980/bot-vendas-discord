@@ -1,5 +1,7 @@
-const{ler,salvar,addLog}=require('../../banco');const{pedido}=require('../../embeds');
+const {pedidoPorId,atualizarPedido,addLog}=require('../../banco');
+const {pedido,sucesso}=require('../../embeds');
 module.exports={id:'ped_pago',async execute(c,i,a){
-const p=ler('pedidos.json')||[];const x=p.find(y=>y.id===a[0]);if(!x)return;
-x.status='PAGO';salvar('pedidos.json',p);addLog('pagamentos',{pedido:x.id,valor:x.valor});
-await i.update({embeds:[pedido(x)],components:[]})}};
+const p=pedidoPorId(a[0]);if(!p)return;
+atualizarPedido(p.id,{status:'PAGO'});addLog('alteracoes',{acao:'PEDIDO_PAGO',pedido:p.id});
+await i.update({embeds:[pedido({...p,status:'PAGO'})],components:[]});
+await i.followUp({embeds:[sucesso('PEDIDO MARCADO COMO PAGO','Pedido #'+p.id+' atualizado com sucesso!')],ephemeral:true})}};

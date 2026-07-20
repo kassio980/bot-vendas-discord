@@ -1,5 +1,7 @@
-const{ler,salvar,addLog}=require('../../banco');const{pedido}=require('../../embeds');
+const {pedidoPorId,atualizarPedido,addLog}=require('../../banco');
+const {pedido,sucesso}=require('../../embeds');
 module.exports={id:'ped_cancelar',async execute(c,i,a){
-const p=ler('pedidos.json')||[];const x=p.find(y=>y.id===a[0]);if(!x)return;
-x.status='CANCELADO';salvar('pedidos.json',p);
-await i.update({embeds:[pedido(x)],components:[]})}};
+const p=pedidoPorId(a[0]);if(!p)return;
+atualizarPedido(p.id,{status:'CANCELADO'});addLog('alteracoes',{acao:'PEDIDO_CANCELADO',pedido:p.id});
+await i.update({embeds:[pedido({...p,status:'CANCELADO'})],components:[]});
+await i.followUp({embeds:[sucesso('PEDIDO CANCELADO','Pedido #'+p.id+' atualizado com sucesso!')],ephemeral:true})}};

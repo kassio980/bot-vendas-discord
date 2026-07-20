@@ -1,5 +1,7 @@
-const{ler,salvar,addLog}=require('../../banco');const{pedido}=require('../../embeds');
+const {pedidoPorId,atualizarPedido,addLog}=require('../../banco');
+const {pedido,sucesso}=require('../../embeds');
 module.exports={id:'ped_aprovar',async execute(c,i,a){
-const p=ler('pedidos.json')||[];const x=p.find(y=>y.id===a[0]);if(!x)return;
-x.status='APROVADO';salvar('pedidos.json',p);addLog('alteracoes',{acao:'PEDIDO_APROVADO',pedido:x.id});
-await i.update({embeds:[pedido(x)],components:[]})}};
+const p=pedidoPorId(a[0]);if(!p)return;
+atualizarPedido(p.id,{status:'APROVADO'});addLog('alteracoes',{acao:'PEDIDO_APROVADO',pedido:p.id});
+await i.update({embeds:[pedido({...p,status:'APROVADO'})],components:[]});
+await i.followUp({embeds:[sucesso('PEDIDO APROVADO','Pedido #'+p.id+' atualizado com sucesso!')],ephemeral:true})}};
