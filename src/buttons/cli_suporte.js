@@ -1,2 +1,10 @@
-const {info}=require('../../embeds');
-module.exports={id:'cli_suporte',async execute(c,i){await i.update({embeds:[info('⚙️ cli_suporte','Funcionalidade 100% integrada ao sistema!\n\nPara **cli_suporte**, use o comando correspondente ou aguarde a proxima atualizacao com interface completa.')],components:[]})}};
+
+const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
+module.exports = { id: 'cli_suporte', async execute(c,i) {
+  const m = new ModalBuilder().setCustomId('modal_suporte_abrir').setTitle('📩 Abrir Chamado');
+  m.addComponents(
+    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('assunto').setLabel('Assunto').setStyle(TextInputStyle.Short).setRequired(true)),
+    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('mensagem').setLabel('Descreva seu problema').setStyle(TextInputStyle.Paragraph).setRequired(true))
+  );
+  await i.showModal(m);
+}};

@@ -1,2 +1,7 @@
-const {info}=require('../../embeds');
-module.exports={id:'adm_nivel',async execute(c,i){await i.update({embeds:[info('⚙️ adm_nivel','Funcionalidade 100% integrada ao sistema!\n\nPara **adm_nivel**, use o comando correspondente ou aguarde a proxima atualizacao com interface completa.')],components:[]})}};
+
+const { embeds } = require('../../embeds');
+const { calcularProgresso } = require('../../banco');
+module.exports = { id: 'adm_nivel', async execute(c,i) {
+  const res = calcularProgresso();
+  await i.update({ embeds:[embeds.nivelLoja(res, res.loja)], components:[painelNivel()] });
+}};

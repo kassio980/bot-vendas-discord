@@ -1,2 +1,16 @@
-const {info}=require('../../embeds');
-module.exports={id:'adm_produtos',async execute(c,i){await i.update({embeds:[info('⚙️ adm_produtos','Funcionalidade 100% integrada ao sistema!\n\nPara **adm_produtos**, use o comando correspondente ou aguarde a proxima atualizacao com interface completa.')],components:[]})}};
+
+const { embeds } = require('../../embeds');
+const { ler } = require('../../banco');
+module.exports = { id: 'adm_produtos', async execute(c,i) {
+  const lista = ler('produtos')||[];
+  const sel = new ActionRowBuilder().addComponents(new StringSelectMenuBuilder()
+    .setCustomId('sel_produto_acao')
+    .setPlaceholder('Escolha uma ação com produtos')
+    .addOptions([
+      {label:'➕ Criar Novo',value:'criar'},
+      {label:'✏️ Editar Existente',value:'editar'},
+      {label:'🗑️ Remover',value:'remover'},
+      {label:'📜 Ver Todos',value:'lista'}
+    ]));
+  await i.update({ embeds:[embeds.info('📦 GERENCIAR PRODUTOS', 'Total cadastrado: **'+lista.length+'**\nEscolha abaixo o que deseja fazer')], components:[painelPrincipal(), painelSecundario(), sel] });
+}};

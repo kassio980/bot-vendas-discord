@@ -1,2 +1,7 @@
-const {info}=require('../../embeds');
-module.exports={id:'adm_pagamentos',async execute(c,i){await i.update({embeds:[info('⚙️ adm_pagamentos','Funcionalidade 100% integrada ao sistema!\n\nPara **adm_pagamentos**, use o comando correspondente ou aguarde a proxima atualizacao com interface completa.')],components:[]})}};
+
+const { embeds } = require('../../embeds');
+const { ler } = require('../../banco');
+module.exports = { id: 'adm_pagamentos', async execute(c,i) {
+  const pendentes = (ler('pedidos')||[]).filter(x=>x.status==='AGUARDANDO').length;
+  await i.update({ embeds:[embeds.info('💳 GERENCIAR PAGAMENTOS', 'Pagamentos aguardando aprovação: **'+pendentes+'**\nClique em um pedido para aprovar ou recusar')], components:[painelPrincipal(), painelSecundario()] });
+}};

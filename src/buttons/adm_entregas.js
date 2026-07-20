@@ -1,2 +1,7 @@
-const {info}=require('../../embeds');
-module.exports={id:'adm_entregas',async execute(c,i){await i.update({embeds:[info('⚙️ adm_entregas','Funcionalidade 100% integrada ao sistema!\n\nPara **adm_entregas**, use o comando correspondente ou aguarde a proxima atualizacao com interface completa.')],components:[]})}};
+
+const { embeds } = require('../../embeds');
+const { ler } = require('../../banco');
+module.exports = { id: 'adm_entregas', async execute(c,i) {
+  const prontos = (ler('pedidos')||[]).filter(x=>x.status==='PAGO').length;
+  await i.update({ embeds:[embeds.info('🚚 ENTREGAS', 'Pedidos prontos para entrega: **'+prontos+'**\nSelecione o pedido e clique em **ENTREGAR**')], components:[painelPrincipal(), painelSecundario()] });
+}};

@@ -1,2 +1,7 @@
-const {info}=require('../../embeds');
-module.exports={id:'adm_estoque',async execute(c,i){await i.update({embeds:[info('⚙️ adm_estoque','Funcionalidade 100% integrada ao sistema!\n\nPara **adm_estoque**, use o comando correspondente ou aguarde a proxima atualizacao com interface completa.')],components:[]})}};
+
+const { embeds } = require('../../embeds');
+const { ler } = require('../../banco');
+module.exports = { id: 'adm_estoque', async execute(c,i) {
+  const baixo = (ler('produtos')||[]).filter(x=>x.estoque>0 && x.estoque<=5).length;
+  await i.update({ embeds:[embeds.info('📦 CONTROLE DE ESTOQUE', 'Produtos com estoque baixo: **'+baixo+'**')], components:[painelPrincipal(), painelSecundario()] });
+}};
