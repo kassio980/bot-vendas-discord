@@ -71,6 +71,11 @@ function removerEstoque(id, qtd=1){
 }
 
 // FUNÇÕES VERSÃO PRO
+function verificarConquistas(usuarioId){
+  const conquistas = ler('conquistas') || [];
+  return conquistas.filter(c => c.usuarioId === usuarioId);
+}
+
 function calcularProgresso(){
   const todos = ler('pedidos') || [];
   const vendas = todos.filter(p => p.status === 'ENTREGUE');
@@ -125,5 +130,5 @@ module.exports = {
   ler, salvar, gerarId, addLog,
   pedidoPorId, produtoPorId, cupomPorCodigo,
   atualizarPedido, atualizarProduto, removerEstoque,
-  calcularProgresso, topClientes
+  calcularProgresso, topClientes, verificarConquistas
 };
