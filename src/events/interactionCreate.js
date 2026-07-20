@@ -1,9 +1,23 @@
 module.exports={name:'interactionCreate',async execute(c,i){
 try{
-const R=async(id,col,a=[])=>{const m=col.get(id);if(m)await m.execute(c,i,a)};
-if(i.isChatInputCommand())await R(i.commandName,c.commands);
-if(i.isButton()){const[x,...y]=i.customId.split('_');await R(x,c.buttons,y)}
-if(i.isModalSubmit()){const[x,...y]=i.customId.split('_');await R(x,c.modals,y)}
-if(i.isStringSelectMenu()){const[x,...y]=i.customId.split('_');await R(x,c.selects,y)}
-}catch(e){console.error(e);try{i.reply({content:`❌ ${e.message}`,ephemeral:true})}catch{try{i.editReply({content:`❌ ${e.message}`,ephemeral:true})}catch{}}}
+let handler=null,args=[];
+const id=i.customId||i.commandName;
+
+if(i.isChatInputCommand()){handler=c.commands.get(id);args=[]}
+else{
+const partes=id.split('_');
+for(let t=partes.length;t>0;t--){
+const teste=partes.slice(0,t).join('_');
+if(c.buttons.has(teste)){handler=c.buttons.get(teste);args=partes.slice(t);break}
+if(c.modals.has(teste)){handler=c.modals.get(teste);args=partes.slice(t);break}
+if(c.selects.has(teste)){handler=c.selects.get(teste);args=partes.slice(t);break}
+}}
+
+if(!handler){console.log('HANDLER NAO ENCONTRADO:',id);try{return i.reply({content:'Comando nao encontrado',ephemeral:true})}catch{return}}
+await handler.execute(c,i,args);
+}catch(e){
+console.log('ERRO INTERACAO:',id,'\n',e.message,'\n',e.stack);
+try{i.reply({content:'❌ Erro: '+e.message,ephemeral:true})}
+catch{try{i.editReply({content:'❌ Erro: '+e.message,ephemeral:true})}catch{}}
+}
 }};
