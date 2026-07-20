@@ -1,13 +1,14 @@
 const fs=require('fs'),path=require('path');
 const DB=path.join(__dirname,'database');
 if(!fs.existsSync(DB))fs.mkdirSync(DB,{recursive:true});
-const ARQS=['produtos','pedidos','tickets','entregas','carteira','cupons','config','logs'];
-ARQS.forEach(a=>{if(!fs.existsSync(path.join(DB,a+'.json')))fs.writeFileSync(path.join(DB,a+'.json'),'{}')});
+['produtos','pedidos','tickets','entregas','carteira','cupons','config','logs','avaliacoes'].forEach(a=>{if(!fs.existsSync(path.join(DB,a+'.json')))fs.writeFileSync(path.join(DB,a+'.json'),'{}')});
 const ler=a=>{try{const r=JSON.parse(fs.readFileSync(path.join(DB,a+'.json'),'utf8'));return Array.isArray(r)?r:(typeof r==='object'?r:[])}catch(e){return a==='config'||a==='carteira'?{}:[]}};
 const salvar=(a,b)=>fs.writeFileSync(path.join(DB,a+'.json'),JSON.stringify(b,null,2));
-const addLog=(t,d)=>{const l=ler('logs');if(!Array.isArray(l[t]))l[t]=[];l[t].unshift({...d,data:new Date().toISOString()});salvar('logs',l)};
+const addLog=(t,d)=>{const l=ler('logs');if(!Array.isArray(l[t]))l[t]=[];l[t].unshift({...d,data:new Date().toISOString()});if(l[t].length>500)l[t]=l[t].slice(0,500);salvar('logs',l)};
 const gerarId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7).toUpperCase();
 const pedidoPorId=id=>(ler('pedidos')||[]).find(x=>x.id===id);
 const ticketPorCanal=id=>(ler('tickets')||[]).find(x=>x.canalId===id);
+const produtoPorId=id=>(ler('produtos')||[]).find(x=>x.id===id);
 const atualizarPedido=(id,dados)=>{const p=ler('pedidos')||[];const i=p.findIndex(x=>x.id===id);if(i>-1){p[i]={...p[i],...dados};salvar('pedidos',p);return p[i]}return null};
-module.exports={ler,salvar,addLog,gerarId,pedidoPorId,ticketPorCanal,atualizarPedido};
+const atualizarProduto=(id,dados)=>{const p=ler('produtos')||[];const i=p.findIndex(x=>x.id===id);if(i>-1){p[i]={...p[i],...dados};salvar('produtos',p);return p[i]}return null};
+module.exports={ler,salvar,addLog,gerarId,pedidoPorId,ticketPorCanal,produtoPorId,atualizarPedido,atualizarProduto};

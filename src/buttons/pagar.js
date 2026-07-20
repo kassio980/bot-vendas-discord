@@ -1,5 +1,3 @@
-const {pagamentoPix}=require('../../embeds');
-const {pedidoPorId}=require('../../banco');
-module.exports={id:'pagar',async execute(c,i,a){
-const p=pedidoPorId(a[0]);if(!p)return i.update({content:'Pedido nao encontrado',components:[]});
-await i.reply({embeds:[pagamentoPix(p)],ephemeral:false})}};
+const {info}=require('../../embeds');
+module.exports={id:'pagar',async execute(c,i){
+await i.update({embeds:[info('⚙️ pagar','Funcionalidade em liberacao. Em breve 100% operacional!')],components:[]})}};
