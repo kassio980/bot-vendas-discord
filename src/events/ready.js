@@ -1,1 +1,1 @@
-module.exports={name:'ready',once:true,execute(c){console.log('✅ Evento ready disparado')}};
+module.exports={name:'ready',once:true,execute(c){console.log('✅ evento ready disparado')}};

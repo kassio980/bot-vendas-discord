@@ -1,1 +1,21 @@
-{"name":"bot-vendas-discord","version":"2.0.0","main":"index.js","scripts":{"start":"node index.js","deploy":"node deploy-commands.js"},"dependencies":{"@discordjs/voice":"^0.19.2","discord.js":"^14.27.0","dotenv":"^16.6.1"}}
+{
+  "name": "minion-store-pro",
+  "version": "3.0.0",
+  "description": "Bot de vendas Discord profissional nivel empresarial",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "deploy": "node deploy-commands.js",
+    "dev": "node index.js"
+  },
+  "dependencies": {
+    "@discordjs/voice": "^0.17.0",
+    "discord.js": "^14.27.0",
+    "dotenv": "^16.6.1",
+    "fs": "0.0.1-security",
+    "path": "^0.12.7"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,23 +1,5 @@
-const https=require('https');
-const {EmbedBuilder}=require('discord.js');
-const {MARCA,ICONE}=require('./embeds');
-
-// Anti dormir: pinga a propria URL a cada 8 minutos
-function antiDormir(){
-const URL=process.env.RENDER_EXTERNAL_URL||process.env.URL_SELF;
-if(!URL){console.log('ℹ️ Anti-dormir desligado (sem URL)');return}
-console.log('✅ Anti-dormir ATIVO → pingando '+URL);
-setInterval(()=>{https.get(URL+'/health',r=>console.log('💓 Ping anti-dormir:',r.statusCode)).on('e',()=>{})},480000);
-}
-
-// Envia log em canal do Discord
-async function logCanal(c,tipo,titulo,descricao,cor=0x34495E){
-const ID=process.env.CANAL_LOGS;if(!ID||!c)return;
-try{
-const ch=await c.channels.fetch(ID).catch(()=>null);if(!ch)return;
-const e=new EmbedBuilder().setColor(cor).setAuthor({name:MARCA+tipo,iconURL:ICONE}).setTitle(titulo).setDescription(descricao).setTimestamp().setFooter({text:MARCA+'Logs automaticos'});
-await ch.send({embeds:[e]}).catch(()=>{});
-}catch(e){console.log('logCanal erro:',e.message)}
-}
-
-module.exports={antiDormir,logCanal};
+const https=require('https');const {EmbedBuilder}=require('discord.js');const {M,I}=require('./embeds');
+function ad(){const U=process.env.RENDER_EXTERNAL_URL;if(!U){console.log('ℹ️ anti-dormir sem url');return}console.log('✅ anti-dormir ATIVO');setInterval(()=>{https.get(U+'/health',r=>console.log('💓',r.statusCode)).on('e',()=>{})},48e4)}
+async function lc(c,tipo,tit,desc,cor=0x34495E){const ID=process.env.CANAL_ADMS||process.env.CANAL_LOGS;if(!ID||!c)return;try{const ch=await c.channels.fetch(ID).catch(()=>null);if(!ch)return;await ch.send({embeds:[new EmbedBuilder().setColor(cor).setAuthor({name:M+tipo,iconURL:I}).setTitle(tit).setDescription(desc).setTimestamp()]}).catch(()=>{})}catch(e){console.log('logCanal',e.message)}}
+async function zap(msg){const W=process.env.WHATSAPP_WEBHOOK;if(!W)return;try{await new Promise((rs,rj)=>{const r=https.request(W,{method:'POST',headers:{'Content-Type':'application/json'}},re=>{let d='';re.on('data',c=>d+=c);re.on('end',rs)});r.on('error',rj);r.end(JSON.stringify({text:msg}))})}catch(e){console.log('zap erro',e.message)}}
+module.exports={antiDormir:ad,logCanal:lc,avisarWhatsApp:zap};

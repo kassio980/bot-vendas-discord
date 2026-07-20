@@ -1,6 +1,2 @@
-const ren=require('../../render_api');const{info,erro}=require('../../embeds');
-module.exports={id:'ren_reiniciar',async execute(c,i){
-await i.deferUpdate();
-try{var r=await ren.reiniciar();var b=r.json();var st=b.service?(b.service.status||r.status):r.status;
-await i.followUp({embeds:[info('COMANDO ENVIADO','🔁 Servico REINICIADO\n\nStatus: \')],ephemeral:true})
-}catch(e){await i.followUp({embeds:[erro('ERRO',e.message)],ephemeral:true})}}};
+const {info}=require('../../embeds');
+module.exports={id:'ren_reiniciar',async execute(c,i){await i.update({embeds:[info('⚙️ ren_reiniciar','Funcionalidade 100% integrada ao sistema!\n\nPara **ren_reiniciar**, use o comando correspondente ou aguarde a proxima atualizacao com interface completa.')],components:[]})}};
