@@ -3,10 +3,24 @@ const caminho = './database/';
 
 if(!fs.existsSync(caminho)) fs.mkdirSync(caminho, {recursive:true});
 
+
 function ler(nome){
   const arq = caminho + nome + '.json';
-  if(!fs.existsSync(arq)) return [];
-  try{ return JSON.parse(fs.readFileSync(arq, 'utf8')); }
+  if(!fs.existsSync(arq)) {
+    if(nome === 'config') return {};
+    return [];
+  }
+  try{
+    const dados = JSON.parse(fs.readFileSync(arq, 'utf8'));
+    if(nome === 'config' && Array.isArray(dados)) return {};
+    return dados;
+  }
+  catch{
+    if(nome === 'config') return {};
+    return [];
+  }
+}
+
   catch{ return []; }
 }
 

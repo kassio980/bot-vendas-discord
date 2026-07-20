@@ -1,10 +1,21 @@
 {
-  "donos": [],
-  "admsAutorizados": [],
-  "cargo_admin": "",
-  "canal_logs": "",
-  "canal_pedidos": "",
-  "canal_loja": "",
-  "mensagem_loja": "🛒 Bem-vindo!",
-  "imagem_loja": ""
+  "loja": {
+    "nome": "MINION STORE",
+    "cor": "#FFC107",
+    "pix": "",
+    "mensagem_aguardando": "Olá! Recebemos seu pedido, aguarde a confirmação do pagamento.",
+    "mensagem_aprovado": "Pagamento aprovado! Em breve você receberá o produto.",
+    "mensagem_entrega": "Seu produto já está pronto! Acesse o link abaixo."
+  },
+  "canais": {
+    "logs": "",
+    "novopedido": "",
+    "pagamentos": "",
+    "ticket": ""
+  },
+  "cargos": {
+    "dono": "",
+    "gerente": "",
+    "atendente": ""
+  }
 }
