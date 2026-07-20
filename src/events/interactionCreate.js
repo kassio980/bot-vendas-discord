@@ -13,10 +13,13 @@ if(c.modals.has(teste)){handler=c.modals.get(teste);args=partes.slice(t);break}
 if(c.selects.has(teste)){handler=c.selects.get(teste);args=partes.slice(t);break}
 }}
 
-if(!handler){console.log('HANDLER NAO ENCONTRADO:',id);try{return i.reply({content:'Comando nao encontrado',ephemeral:true})}catch{return}}
+if(!handler){
+console.log('HANDLER NAO ENCONTRADO:',id);
+try{return i.reply({content:'⚠️ Funcao nao encontrada: '+id,ephemeral:true})}catch{return}
+}
 await handler.execute(c,i,args);
 }catch(e){
-console.log('ERRO INTERACAO:',id,'\n',e.message,'\n',e.stack);
+console.log('ERRO:',id,'\n',e.message);
 try{i.reply({content:'❌ Erro: '+e.message,ephemeral:true})}
 catch{try{i.editReply({content:'❌ Erro: '+e.message,ephemeral:true})}catch{}}
 }
