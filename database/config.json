@@ -1,1 +1,10 @@
-{"donos":[],"admsAutorizados":[],"cargo_admin":"","canal_logs":"","canal_pedidos":"","canal_loja":"","mensagem_loja":"🛒 Bem-vindo!","imagem_loja":""}
+{
+  "donos": [],
+  "admsAutorizados": [],
+  "cargo_admin": "",
+  "canal_logs": "",
+  "canal_pedidos": "",
+  "canal_loja": "",
+  "mensagem_loja": "🛒 Bem-vindo!",
+  "imagem_loja": ""
+}
