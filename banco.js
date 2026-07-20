@@ -71,6 +71,12 @@ function removerEstoque(id, qtd=1){
 }
 
 // FUNÇÕES VERSÃO PRO
+function verificarConquistas(usuarioId = null){
+  const lista = ler('conquistas') || [];
+  if(!usuarioId) return lista;
+  return lista.filter(c => c?.usuarioId === usuarioId);
+}
+
 function verificarConquistas(usuarioId){
   const conquistas = ler('conquistas') || [];
   return conquistas.filter(c => c.usuarioId === usuarioId);
