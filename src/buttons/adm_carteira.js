@@ -6,7 +6,7 @@ const baseId = 'MINION_STORE_';
 function painelPrincipal() {
   return new ActionRowBuilder().addComponents(
     new ButtonBuilder().setCustomId(baseId+'produtos').setLabel('📦 Produtos').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId(baseId+'produtos').setLabel('📋 Pedidos').setStyle(ButtonStyle.Secondary),
+    new ButtonBuilder().setCustomId(baseId+'pedidos').setLabel('📋 Pedidos').setStyle(ButtonStyle.Secondary),
     new ButtonBuilder().setCustomId(baseId+'pagamentos').setLabel('💳 Pagamentos').setStyle(ButtonStyle.Secondary),
     new ButtonBuilder().setCustomId(baseId+'entregas').setLabel('🚚 Entregas').setStyle(ButtonStyle.Secondary)
   );

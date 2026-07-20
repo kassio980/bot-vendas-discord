@@ -1,5 +1,5 @@
 const {EmbedBuilder}=require('discord.js');const {ler}=require('../../banco');
-module.exports={id:'adm_logs',async execute(c,i){
+module.exports={id: 'MINION_STORE_logs',async execute(c,i){
 const l=ler('logs')||{};const ultimos=[];
 ['alteracoes','pagamentos','entregas','saques','vendas'].forEach(t=>{(l[t]||[]).slice(0,3).forEach(x=>ultimos.push({t,...x}))});
 ultimos.sort((a,b)=>new Date(b.data)-new Date(a.data));

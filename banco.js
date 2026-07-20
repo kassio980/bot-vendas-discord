@@ -83,4 +83,54 @@ loja.totalVendas=res.totalVendas;loja.faturamento=res.faturamento;
 salvar('loja',loja);return{novas,loja,res}
 }
 
-module.exports={ler,salvar,addLog,gerarId,pedidoPorId,produtoPorId,cupomPorCodigo,atualizarPedido,atualizarProduto,temPermissao,adicionarCarteira,removerEstoque,reporEstoque,pedidoStock,adicionarRanking,usarCupom,criarIndicacao,usarIndicacao,NIVEIS,MARCOS,calcularNivelLoja,verificarConquistas};
+
+
+// ==============================================
+// ✅ FUNÇÕES ADICIONADAS AGORA
+// ==============================================
+function calcularProgresso(){
+  const vendas = ler('pedidos').filter(p=>p.status==='ENTREGUE')||[];
+  const totalVendas = vendas.length;
+  const totalFaturado = vendas.reduce((s,x)=>s+(x.valor||0),0);
+  const niveis = [
+    {id:1,nome:'LOJA INICIANTE',vendas:0,faturamento:0},
+    {id:2,nome:'LOJA EM CRESCIMENTO',vendas:3,faturamento:25},
+    {id:3,nome:'LOJA CRESCENDO',vendas:5,faturamento:50},
+    {id:4,nome:'LOJA POPULAR',vendas:10,faturamento:150},
+    {id:5,nome:'LOJA TOP',vendas:25,faturamento:500}
+  ];
+  let nivelAtual = niveis[0];
+  let proximo = niveis[1];
+  for(let i=0;i<niveis.length;i++){
+    if(totalVendas >= niveis[i].vendas && totalFaturado >= niveis[i].faturamento){
+      nivelAtual = niveis[i];
+      proximo = niveis[i+1] || null;
+    }
+  }
+  const faltaV = proximo ? proximo.vendas - totalVendas : 0;
+  const faltaF = proximo ? proximo.faturamento - totalFaturado : 0;
+  const porcento = proximo ? Math.min(100, Math.round(((totalVendas/proximo.vendas)*50 + (totalFaturado/proximo.faturamento)*50))) : 100;
+  return {
+    loja: nivelAtual,
+    vendas: totalVendas,
+    faturamento: totalFaturado,
+    progresso: porcento,
+    proximo: proximo,
+    faltaVendas: faltaV,
+    faltaValor: faltaF
+  };
+}
+
+function topClientes(qtd=10){
+  const pedidos = ler('pedidos')||[];
+  const contagem = {};
+  pedidos.forEach(p=>{
+    if(!contagem[p.clienteId]) contagem[p.clienteId] = {id:p.clienteId, total:0, vezes:0};
+    contagem[p.clienteId].total += p.valor||0;
+    contagem[p.clienteId].vezes++;
+  });
+  return Object.values(contagem).sort((a,b)=>b.total - a.total).slice(0,qtd);
+}
+
+module.exports.calcularProgresso = calcularProgresso;
+module.exports.topClientes = topClientes;
