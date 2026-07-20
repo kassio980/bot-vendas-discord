@@ -26,7 +26,7 @@ module.exports = {
     const arr = Array.isArray(b.ler('carteira')) ? b.ler('carteira') : [];
     const total = arr.reduce(function(s,x){ return s + (x.saldo||0); }, 0);
     await i.update({
-      embeds:[emb.info('💵 CARTEIRA DE CLIENTES', 'Saldo total distribuido: **R$ '+total.toFixed(2).replace('.',',')+'**\nVocê pode adicionar ou remover saldo de qualquer cliente')],
+      embeds:[emb.info('💵 CARTEIRA DE CLIENTES', 'Saldo total distribuido: **R$ '+total.toFixed(2).replace('.',',')+'**\\nVocê pode adicionar ou remover saldo de qualquer cliente')],
       components:[painelPrincipal(), painelSecundario()]
     });
   }
