@@ -1,8 +1,7 @@
 const fs = require('fs');
 const caminho = './database/';
 
-if(!fs.existsSync(caminho)) fs.mkdirSync(caminho, {recursive:true});
-
+if(!fs.existsSync(caminho)) fs.mkdirSync(caminho, { recursive: true });
 
 function ler(nome){
   const arq = caminho + nome + '.json';
@@ -10,22 +9,19 @@ function ler(nome){
     if(nome === 'config') return {};
     return [];
   }
-  try{
+  try {
     const dados = JSON.parse(fs.readFileSync(arq, 'utf8'));
     if(nome === 'config' && Array.isArray(dados)) return {};
     return dados;
   }
-  catch{
+  catch (erro) {
     if(nome === 'config') return {};
     return [];
   }
 }
 
-  catch{ return []; }
-}
-
 function salvar(nome, dados){
-  fs.writeFileSync(caminho+nome+'.json', JSON.stringify(dados, null, 2));
+  fs.writeFileSync(caminho + nome + '.json', JSON.stringify(dados, null, 2));
 }
 
 function gerarId(){
@@ -33,48 +29,48 @@ function gerarId(){
 }
 
 function addLog(tipo, dados){
-  const l = ler('logs')||[];
-  l.unshift({tipo, data:new Date().toISOString(), ...dados});
+  const l = ler('logs') || [];
+  l.unshift({ tipo, data: new Date().toISOString(), ...dados });
   salvar('logs', l.slice(0,500));
 }
 
 function pedidoPorId(id){
-  return (ler('pedidos')||[]).find(x=>x.id===id);
+  return (ler('pedidos') || []).find(x => x.id === id);
 }
 function produtoPorId(id){
-  return (ler('produtos')||[]).find(x=>x.id===id);
+  return (ler('produtos') || []).find(x => x.id === id);
 }
 function cupomPorCodigo(cod){
   const agora = new Date();
-  return (ler('cupons')||[]).find(x=>
-    x.codigo.toLowerCase()===cod.toLowerCase()
+  return (ler('cupons') || []).find(x =>
+    x.codigo.toLowerCase() === cod.toLowerCase()
     && (x.expira ? new Date(x.expira) > agora : true)
-    && (x.usosMax===0 || x.usos < x.usosMax)
+    && (x.usosMax === 0 || x.usos < x.usosMax)
   );
 }
 function atualizarPedido(id, novodados){
-  const p = ler('pedidos')||[];
-  const idx = p.findIndex(x=>x.id===id);
-  if(idx===-1) return;
-  p[idx] = {...p[idx], ...novodados};
+  const p = ler('pedidos') || [];
+  const idx = p.findIndex(x => x.id === id);
+  if(idx === -1) return;
+  p[idx] = { ...p[idx], ...novodados };
   salvar('pedidos', p);
 }
 function atualizarProduto(id, novodados){
-  const p = ler('produtos')||[];
-  const idx = p.findIndex(x=>x.id===id);
-  if(idx===-1) return;
-  p[idx] = {...p[idx], ...novodados};
+  const p = ler('produtos') || [];
+  const idx = p.findIndex(x => x.id === id);
+  if(idx === -1) return;
+  p[idx] = { ...p[idx], ...novodados };
   salvar('produtos', p);
 }
 function removerEstoque(id, qtd=1){
-  const p = ler('produtos')||[];
-  const prod = p.find(x=>x.id===id);
-  if(!prod || prod.estoque===-1) return;
+  const p = ler('produtos') || [];
+  const prod = p.find(x => x.id === id);
+  if(!prod || prod.estoque === -1) return;
   prod.estoque = Math.max(0, prod.estoque - qtd);
   salvar('produtos', p);
 }
 
-// ====== FUNÇÕES EXTRAS DA VERSÃO PRO ======
+// FUNÇÕES VERSÃO PRO
 function calcularProgresso(){
   const todos = ler('pedidos') || [];
   const vendas = todos.filter(p => p.status === 'ENTREGUE');
@@ -124,15 +120,10 @@ function topClientes(qtd=10){
   return Object.values(contagem).sort((a,b) => b.total - a.total).slice(0,qtd);
 }
 
-function verificarConquistas(){
-  // Mantido da versão Pro
-}
-
-// ====== EXPORTA TUDO CORRETAMENTE ======
+// EXPORTA TUDO
 module.exports = {
   ler, salvar, gerarId, addLog,
   pedidoPorId, produtoPorId, cupomPorCodigo,
   atualizarPedido, atualizarProduto, removerEstoque,
-  calcularProgresso, topClientes, verificarConquistas,
-  MARCOS: []
+  calcularProgresso, topClientes
 };
